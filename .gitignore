@@ -7,3 +7,6 @@ node_modules/
 
 # private working notes, not part of the public repo
 CLAUDE.md
+
+# generated on demand by build.js for republishing the hosted copy
+dist/artifact.html
