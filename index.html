@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Interactive 2D Beam Solver</title>
+<meta name="description" content="Interactive shear force, bending moment, slope and deflection diagrams for beams with any supports and any loading.">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>📐</text></svg>">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============================ top bar ============================ -->
+  <header class="topbar no-print">
+    <div class="brand">
+      <h1>Interactive 2D Beam Solver</h1>
+      <span class="sub">shear &middot; moment &middot; slope &middot; deflection</span>
+    </div>
+
+    <div class="seg" id="unitSeg" role="group" aria-label="Unit system">
+      <button type="button" data-u="SI" aria-pressed="true">SI &nbsp;kN, m</button>
+      <button type="button" data-u="US" aria-pressed="false">US &nbsp;kip, ft</button>
+    </div>
+
+    <select id="exampleSel" style="max-width:210px" aria-label="Load an example">
+      <option value="">Examples&hellip;</option>
+    </select>
+
+    <span class="spacer"></span>
+
+    <button class="btn" id="btnUndo" title="Undo (Ctrl+Z)">Undo</button>
+    <button class="btn" id="btnRedo" title="Redo (Ctrl+Y)">Redo</button>
+    <button class="btn" id="btnClear" title="Start from an empty beam">Reset</button>
+    <button class="btn" id="btnPng" title="Download the drawing as a PNG image">PNG</button>
+    <button class="btn" id="btnCsv" title="Download the diagram data as CSV">CSV</button>
+    <button class="btn" id="btnJson" title="Export the model as JSON">Export</button>
+    <button class="btn" id="btnImport" title="Import a model from JSON">Import</button>
+    <button class="btn" id="btnShare" title="Copy a link that reproduces this model">Link</button>
+    <button class="btn" id="btnPrint" title="Print a report">Print</button>
+    <button class="btn" id="btnTheme" title="Light / dark / system">Theme</button>
+    <button class="btn primary" id="btnHelp" title="Help and sign conventions">?</button>
+  </header>
+
+  <!-- ============================== body ============================= -->
+  <div class="main">
+
+    <!-- ------------------------- sidebar ------------------------- -->
+    <aside class="sidebar no-print">
+
+      <details class="panel" open>
+        <summary>Beam</summary>
+        <div class="body" id="beamPanel"></div>
+      </details>
+
+      <details class="panel" open>
+        <summary>Supports</summary>
+        <div class="body" id="supPanel"></div>
+      </details>
+
+      <details class="panel" open>
+        <summary>Loads</summary>
+        <div class="body" id="loadPanel"></div>
+      </details>
+
+      <details class="panel">
+        <summary>Internal releases</summary>
+        <div class="body" id="relPanel"></div>
+      </details>
+
+      <details class="panel" open id="selDetails">
+        <summary>Selected object</summary>
+        <div class="body" id="selPanel"></div>
+      </details>
+
+      <details class="panel">
+        <summary>Display options</summary>
+        <div class="body" id="dispPanel"></div>
+      </details>
+
+    </aside>
+
+    <!-- ------------------------ workspace ------------------------ -->
+    <main class="workspace">
+
+      <div id="msgs"></div>
+
+      <section class="card">
+        <header>
+          <h2>Model &amp; diagrams</h2>
+          <div class="spacer"></div>
+          <div class="togs no-print" id="quickTogs"></div>
+        </header>
+        <div class="stagewrap">
+          <svg id="stage" role="img" aria-label="Beam model with shear force, bending moment and deflection diagrams"></svg>
+          <div class="tip" id="tip" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <div class="grid-cards">
+
+        <section class="card">
+          <header><h2>Support reactions</h2></header>
+          <div class="pad" id="reactBox"></div>
+        </section>
+
+        <section class="card">
+          <header><h2>Summary</h2></header>
+          <div class="pad" id="sumBox"></div>
+        </section>
+
+        <section class="card">
+          <header><h2>Values at a section</h2></header>
+          <div class="pad" id="sectionBox"></div>
+        </section>
+
+      </div>
+
+      <p class="hint" style="max-width:70ch">
+        Sign convention &mdash; downward forces and clockwise moments are positive on input;
+        shear is the resultant of the upward forces to the left of the cut; bending moment is
+        positive when it sags (tension on the bottom fibre); deflection is positive upward.
+        Analysis is Euler&ndash;Bernoulli (bending only, shear deformation neglected), small
+        displacements, linear elastic.
+      </p>
+
+    </main>
+  </div>
+</div>
+
+<div id="modalHost"></div>
+<div class="toast" id="toast"></div>
+
+<script src="js/units.js"></script>
+<script src="js/solver.js"></script>
+<script src="js/render.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

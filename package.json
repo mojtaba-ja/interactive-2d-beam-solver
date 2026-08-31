@@ -1,0 +1,10 @@
+{
+  "name": "interactive-2d-beam-solver",
+  "version": "1.0.0",
+  "description": "Interactive shear force, bending moment, slope and deflection diagrams for beams with any supports and any loading.",
+  "private": true,
+  "scripts": {
+    "test": "node tests/solver.test.js",
+    "start": "python -m http.server 8000"
+  }
+}
