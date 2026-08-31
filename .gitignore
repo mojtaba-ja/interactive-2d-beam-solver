@@ -4,3 +4,6 @@ node_modules/
 
 # emailable bundle, regenerate as needed
 *.zip
+
+# private working notes, not part of the public repo
+CLAUDE.md
