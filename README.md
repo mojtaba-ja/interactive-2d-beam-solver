@@ -16,6 +16,10 @@
 </p>
 
 <p align="center">
+  <img src="docs/Video.gif" alt="A propped cantilever under a uniform load with its shear force diagram" width="900">
+</p>
+
+<p align="center">
   <a href="https://mojtaba-ja.github.io/interactive-2d-beam-solver/"><b>▶&nbsp; Try it</b></a>
   &nbsp;&nbsp;·&nbsp;&nbsp;
   <a href="https://github.com/mojtaba-ja/interactive-2d-beam-solver/raw/main/dist/Interactive-2D-Beam-Solver.html"><b>⬇&nbsp; Download</b></a>
