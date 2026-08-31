@@ -34,7 +34,7 @@
 
 ## Quick start
 
-Download [the single file](https://github.com/mojtaba-ja/interactive-2d-beam-solver/raw/main/dist/Interactive-2D-Beam-Solver.html) and open it. That's it.
+<a href="https://githubusercontent.com" download="Interactive-2D-Beam-Solver.html"><b>⬇&nbsp; Download the single file</b></a> and open it. That's it.
 
 From source:
 
