@@ -1,0 +1,34 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: validation suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run the validation suite
+        run: node tests/solver.test.js
+
+      # The single-file bundle in dist/ is committed so that people can
+      # download and open it without a build step. That only works if it
+      # never drifts from the source it was built from.
+      - name: Check the bundled file is up to date
+        run: |
+          node build.js
+          if ! git diff --quiet -- dist/; then
+            echo "::error::dist/ is stale - run 'node build.js' and commit the result"
+            git diff --stat -- dist/
+            exit 1
+          fi
+          echo "dist/ matches the source"

@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <img alt="tests" src="https://img.shields.io/badge/tests-167%20passing-1f7a4d">
+  <a href="https://github.com/mojtaba-ja/interactive-2d-beam-solver/actions/workflows/ci.yml"><img alt="tests" src="https://github.com/mojtaba-ja/interactive-2d-beam-solver/actions/workflows/ci.yml/badge.svg"></a>
   <img alt="dependencies" src="https://img.shields.io/badge/dependencies-none-2a78d6">
   <img alt="backend" src="https://img.shields.io/badge/backend-none-2a78d6">
   <img alt="license" src="https://img.shields.io/badge/license-MIT-83837c">
