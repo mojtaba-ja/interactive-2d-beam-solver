@@ -936,7 +936,26 @@
     };
   }
 
+  var NO_DOWNLOAD = (typeof window !== 'undefined' && window.__ARTIFACT__ === true);
+
   function download(name, mime, data) {
+    if (NO_DOWNLOAD) {
+      modal('Copy ' + name, function (b) {
+        elh('p', { text: 'This embedded copy of the solver cannot save files directly. Select everything below and copy it into a file called "' + name + '".' }, b);
+        var bar = elh('div', { class: 'addbar', style: 'margin:8px 0' }, b);
+        var ta = elh('textarea', {}, b);
+        ta.value = data;
+        elh('button', { class: 'btn primary', text: 'Select all', onclick: function () { ta.focus(); ta.select(); } }, bar);
+        elh('button', { class: 'btn', text: 'Copy to clipboard', onclick: function () {
+          ta.select();
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(data).then(function () { toast('Copied'); }, function () { toast('Press Ctrl+C to copy'); });
+          } else { toast('Press Ctrl+C to copy'); }
+        } }, bar);
+        setTimeout(function () { ta.focus(); ta.select(); }, 50);
+      });
+      return;
+    }
     var blob = new Blob([data], { type: mime });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
@@ -962,6 +981,18 @@
   }
 
   function exportPNG() {
+    if (NO_DOWNLOAD) {
+      modal('Saving the drawing', function (b) {
+        b.innerHTML = '<p>This embedded copy of the solver is not allowed to save image files. ' +
+          'Two ways round it:</p><ul>' +
+          '<li>Take a screenshot of the drawing (<code>Win+Shift+S</code> on Windows, ' +
+          '<code>Cmd+Shift+4</code> on a Mac).</li>' +
+          '<li>Use <b>Print</b> and choose "Save as PDF" - that keeps the diagrams sharp at any zoom, ' +
+          'and includes the reaction and summary tables.</li></ul>' +
+          '<p>The downloadable single-file version of this tool exports PNG directly.</p>';
+      });
+      return;
+    }
     var svg = $('stage').cloneNode(true);
     svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
     /* resolve the few CSS variables used by the overlays */
