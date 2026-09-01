@@ -38,7 +38,9 @@
 
 ## Quick start
 
-<a href="https://mojtaba-ja.github.io/interactive-2d-beam-solver/"><b>▶&nbsp; Download the single file</b></a> and open it. That's it.
+<a href="https://mojtaba-ja.github.io/interactive-2d-beam-solver/"><b>▶&nbsp; Open it in your browser</b></a> — nothing to install.
+
+<a href="https://github.com/mojtaba-ja/interactive-2d-beam-solver/raw/main/dist/Interactive-2D-Beam-Solver.html"><b>⬇&nbsp; Download the single file</b></a> — one HTML file, double-click to open, works offline.
 
 From source:
 
