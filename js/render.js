@@ -165,7 +165,7 @@ var Render = (function () {
         }
         txt(g, (xa + xb) / 2, yy0 - 8,
           (ld.w1 === ld.w2 ? fmtN(ld.w1, U.dist) : fmtN(ld.w1, U.dist) + ' \u2192 ' + fmtN(ld.w2, U.dist)) + ' ' + U.dist.sym,
-          { 'text-anchor': 'middle', 'font-size': 10.5, fill: loadCol, 'font-weight': 600 });
+          { 'text-anchor': 'middle', 'font-size': 12.5, fill: loadCol, 'font-weight': 600 });
       }
 
       /* drag handles for a and b */
@@ -180,7 +180,7 @@ var Render = (function () {
         ? fmtN(ld.w1, U.dist) + ' ' + U.dist.sym
         : fmtN(ld.w1, U.dist) + ' → ' + fmtN(ld.w2, U.dist) + ' ' + U.dist.sym;
       txt(g, (xa + xb) / 2, Math.min(y1, y2) - 7, lbl,
-        { 'text-anchor': 'middle', 'font-size': 10.5, fill: loadCol, 'font-weight': 600 });
+        { 'text-anchor': 'middle', 'font-size': 12.5, fill: loadCol, 'font-weight': 600 });
 
       if (isSel('load', ld.id)) {
         el('rect', {
@@ -210,7 +210,7 @@ var Render = (function () {
       });
       txt(g, (xa + xb) / 2, yy - 16,
         (ld.m1 === ld.m2 ? fmtN(ld.m1, U.distM) : fmtN(ld.m1, U.distM) + ' → ' + fmtN(ld.m2, U.distM)) + ' ' + U.distM.sym,
-        { 'text-anchor': 'middle', 'font-size': 10.5, fill: loadCol, 'font-weight': 600 });
+        { 'text-anchor': 'middle', 'font-size': 12.5, fill: loadCol, 'font-weight': 600 });
     });
 
     /* ---------- the beam itself ---------- */
@@ -267,7 +267,7 @@ var Render = (function () {
         el('line', { x1: X(s.x) + 17, y1: yBeam + 12, x2: X(s.x) + 17, y2: yBeam + 30,
                      stroke: css('--warn'), 'stroke-width': 1.4, 'marker-end': 'url(#ah-dim)' }, g);
         txt(g, X(s.x) + 21, yBeam + 26, fmtN(s.dy, U.small) + U.small.sym,
-          { 'font-size': 9.5, fill: css('--warn') });
+          { 'font-size': 11.5, fill: css('--warn') });
       }
     });
 
@@ -290,7 +290,7 @@ var Render = (function () {
         el('circle', { cx: tailX, cy: tailY, r: 8, fill: 'transparent', class: 'grabbable',
                        'data-kind': 'load', 'data-id': ld.id, 'data-handle': 'body' }, g);
         txt(g, tailX, tailY - 7, fmtN(Math.abs(ld.P), U.force) + ' ' + U.force.sym,
-          { 'text-anchor': 'middle', 'font-size': 10.5, fill: loadCol, 'font-weight': 600 });
+          { 'text-anchor': 'middle', 'font-size': 12.5, fill: loadCol, 'font-weight': 600 });
         if (isSel('load', ld.id)) {
           el('circle', { cx: x, cy: tipY, r: 7, fill: 'none', stroke: accent, 'stroke-width': 1.5 }, g);
         }
@@ -301,7 +301,7 @@ var Render = (function () {
         arcArrow(g2, x2, yBeam, r2, ld.M >= 0, loadCol, 2.2);
         el('circle', { cx: x2, cy: yBeam, r: r2 + 4, fill: 'transparent' }, g2);
         txt(g2, x2, yBeam - r2 - 10, fmtN(Math.abs(ld.M), U.mom) + ' ' + U.mom.sym,
-          { 'text-anchor': 'middle', 'font-size': 10.5, fill: loadCol, 'font-weight': 600 });
+          { 'text-anchor': 'middle', 'font-size': 12.5, fill: loadCol, 'font-weight': 600 });
         if (isSel('load', ld.id)) {
           el('circle', { cx: x2, cy: yBeam, r: r2 + 7, fill: 'none', stroke: accent,
                          'stroke-width': 1.4, 'stroke-dasharray': '3 3' }, g2);
@@ -322,13 +322,13 @@ var Render = (function () {
             stroke: accent, 'stroke-width': 2, 'marker-end': 'url(#ah-react)'
           }, g);
           txt(g, x, y0 + 12, fmtN(Math.abs(R.Ry), U.force) + ' ' + U.force.sym,
-            { 'text-anchor': 'middle', 'font-size': 10, fill: accent, 'font-weight': 600 });
+            { 'text-anchor': 'middle', 'font-size': 12, fill: accent, 'font-weight': 600 });
         }
         if (Math.abs(R.Mz) > 1e-9) {
           var mx = x + side * 34;
           arcArrow(g, mx, yBeam + SCENE_BEAM / 2 + 20, 10, R.Mz < 0, accent, 1.7);
           txt(g, mx, yBeam + SCENE_BEAM / 2 + 42, fmtN(Math.abs(R.Mz), U.mom) + ' ' + U.mom.sym,
-            { 'text-anchor': 'middle', 'font-size': 10, fill: accent, 'font-weight': 600 });
+            { 'text-anchor': 'middle', 'font-size': 12, fill: accent, 'font-weight': 600 });
         }
         if (Math.abs(R.Rx) > 1e-9) {
           var right = R.Rx > 0;
@@ -338,7 +338,7 @@ var Render = (function () {
             stroke: accent, 'stroke-width': 2, 'marker-end': 'url(#ah-react)'
           }, g);
           txt(g, x - side * 32, yx - 4, fmtN(Math.abs(R.Rx), U.force) + ' ' + U.force.sym,
-            { 'text-anchor': 'middle', 'font-size': 10, fill: accent, 'font-weight': 600 });
+            { 'text-anchor': 'middle', 'font-size': 12, fill: accent, 'font-weight': 600 });
         }
       });
     }
@@ -364,7 +364,7 @@ var Render = (function () {
                      'marker-start': 'url(#ah-dim)', 'marker-end': 'url(#ah-dim)' }, g);
         if (x2 - x1 > 34) {
           txt(g, (x1 + x2) / 2, yd - 4, fmtN(xs[i + 1] - xs[i], U.len),
-            { 'text-anchor': 'middle', 'font-size': 9.5, fill: ink3 });
+            { 'text-anchor': 'middle', 'font-size': 11.5, fill: ink3 });
         }
       }
       /* overall length */
@@ -372,7 +372,7 @@ var Render = (function () {
       el('line', { x1: X(0), y1: yo, x2: X(L), y2: yo, stroke: ink2, 'stroke-width': 1,
                    'marker-start': 'url(#ah-dim)', 'marker-end': 'url(#ah-dim)' }, g);
       txt(g, (X(0) + X(L)) / 2, yo - 4, 'L = ' + fmtN(L, U.len) + ' ' + U.len.sym,
-        { 'text-anchor': 'middle', 'font-size': 10, fill: ink2, 'font-weight': 600 });
+        { 'text-anchor': 'middle', 'font-size': 12, fill: ink2, 'font-weight': 600 });
     })();
 
     /* =============================================================== */
@@ -415,10 +415,10 @@ var Render = (function () {
       for (var xt = 0; xt <= L + 1e-9; xt += step) {
         var pxr = X(Math.min(xt, L));
         el('line', { x1: pxr, y1: yr, x2: pxr, y2: yr + 4, stroke: gridS, 'stroke-width': 1 }, ruler);
-        txt(ruler, pxr, yr + 14, fmtN(xt, U.len, 4), { 'font-size': 9.5, fill: ink3, 'text-anchor': 'middle' });
+        txt(ruler, pxr, yr + 14, fmtN(xt, U.len, 4), { 'font-size': 11.5, fill: ink3, 'text-anchor': 'middle' });
       }
       txt(ruler, PAD_L + plotW, yr + 26, 'x  [' + U.len.sym + ']',
-        { 'font-size': 9.5, fill: ink3, 'text-anchor': 'end' });
+        { 'font-size': 11.5, fill: ink3, 'text-anchor': 'end' });
       y = yr + 30;
     }
 
@@ -504,18 +504,18 @@ var Render = (function () {
     var title = el('g', null, g);
     el('rect', { x: o.padL, y: top + 2, width: 9, height: 9, rx: 2.5, fill: o.color }, title);
     txt(title, o.padL + 14, top + 11, o.label + '  ' + o.sym,
-      { 'font-size': 11.5, 'font-weight': 650, fill: o.ink });
+      { 'font-size': 13.5, 'font-weight': 650, fill: o.ink });
     txt(title, o.padL + o.plotW, top + 11, '[' + o.unit.sym + ']',
-      { 'font-size': 10.5, fill: o.ink3, 'text-anchor': 'end' });
+      { 'font-size': 12.5, fill: o.ink3, 'text-anchor': 'end' });
 
     /* ---- axis value labels ---- */
     txt(g, o.padL - 7, plotTop + 9, fmtN(topValue, o.unit, 3),
-      { 'font-size': 9.5, fill: o.ink3, 'text-anchor': 'end' });
+      { 'font-size': 11.5, fill: o.ink3, 'text-anchor': 'end' });
     txt(g, o.padL - 7, bottom - 2, fmtN(botValue, o.unit, 3),
-      { 'font-size': 9.5, fill: o.ink3, 'text-anchor': 'end' });
+      { 'font-size': 11.5, fill: o.ink3, 'text-anchor': 'end' });
     /* the zero label is dropped when it would collide with an end label */
     if (y0 - plotTop > 15 && bottom - y0 > 15) {
-      txt(g, o.padL - 7, y0 + 3.5, '0', { 'font-size': 9.5, fill: o.ink3, 'text-anchor': 'end' });
+      txt(g, o.padL - 7, y0 + 3.5, '0', { 'font-size': 11.5, fill: o.ink3, 'text-anchor': 'end' });
     }
 
     /* ---- extreme value annotations (direct labels, never every point) -- */
@@ -526,7 +526,7 @@ var Render = (function () {
       el('circle', { cx: px, cy: py, r: 3.4, fill: o.color, stroke: o.surf, 'stroke-width': 1.6 }, g);
       var anchor = px > o.padL + o.plotW - 62 ? 'end' : (px < o.padL + 62 ? 'start' : 'middle');
       var t = txt(g, px, above ? py - 7 : py + 14, fmtN(pt.y, o.unit, 4),
-        { 'font-size': 10.5, 'font-weight': 650, fill: o.ink, 'text-anchor': anchor });
+        { 'font-size': 12.5, 'font-weight': 650, fill: o.ink, 'text-anchor': anchor });
       t.setAttribute('paint-order', 'stroke');
       t.setAttribute('stroke', o.surf);
       t.setAttribute('stroke-width', '3.5');

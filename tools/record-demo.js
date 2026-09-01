@@ -29,24 +29,31 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { execFileSync } = require('child_process');
+const { execFileSync } = require('child_process');   // used for ffmpeg
 
-/* deliberately not a local dependency - see the note above */
+/* deliberately not a local dependency - see the note above.  The global
+   install is found by path: shelling out to npm is not portable here,
+   because Node refuses to spawn npm.cmd without a shell on Windows. */
 let chromium;
-try {
-  ({ chromium } = require('playwright'));
-} catch (e) {
+const globalRoots = [
+  process.env.npm_config_prefix && path.join(process.env.npm_config_prefix, 'node_modules'),
+  process.env.APPDATA && path.join(process.env.APPDATA, 'npm', 'node_modules'),
+  '/usr/local/lib/node_modules',
+  '/usr/lib/node_modules'
+].filter(Boolean);
+
+for (const root of [null].concat(globalRoots)) {
   try {
-    const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
-    const groot = execFileSync(npm, ['root', '-g']).toString().trim();
-    ({ chromium } = require(path.join(groot, 'playwright')));
-  } catch (e2) {
-    console.error('playwright not found.  Install it with:  npm install -g playwright');
-    process.exit(1);
-  }
+    ({ chromium } = require(root ? path.join(root, 'playwright') : 'playwright'));
+    break;
+  } catch (e) { /* try the next one */ }
+}
+if (!chromium) {
+  console.error('playwright not found.  Install it with:  npm install -g playwright');
+  process.exit(1);
 }
 
-const W = 1600, H = 940, DSF = 2, FPS = 30;
+const W = 1180, H = 970, DSF = 2, FPS = 30;
 const OUT = path.join(os.tmpdir(), 'beam-demo-frames');
 const DOCS = path.join(__dirname, '..', 'docs');
 const URL = 'file://' + path.join(__dirname, '..', 'index.html').replace(/\\/g, '/');
@@ -135,7 +142,9 @@ const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   const box = sel => page.evaluate(s => {
     const e = document.querySelector(s); if (!e) return null;
     const r = e.getBoundingClientRect();
-    return { x: r.x + r.width / 2, y: r.y + r.height / 2, top: r.y, bottom: r.y + r.height };
+    return { x: r.x + r.width / 2, y: r.y + r.height / 2,
+             left: r.x, right: r.x + r.width, w: r.width,
+             top: r.y, bottom: r.y + r.height };
   }, sel);
 
   const loadExample = async i => {
@@ -156,18 +165,21 @@ const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   await pressPulse();
   await hold(14);
 
+  const stage = await box('#stage');
+  const span = stage.w;                    // scale every gesture off this
+
   /* B - drag the right-hand roller inward; the diagrams follow live */
   const sups = await page.$$eval('#stage [data-kind="support"]', els =>
     els.map(e => { const r = e.getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; }));
   const right = sups[sups.length - 1];
   await moveTo(right.x, right.y, 26);
   await hold(6);
-  await dragTo(right.x - 235, right.y, 46);
+  await dragTo(right.x - 0.21 * span, right.y, 46);
   await hold(20);
 
   /* C - double-click empty space over the new overhang to drop a point load */
   const beam = await box('#stage [data-kind="beam"]');
-  const dcX = right.x - 95, dcY = beam.bottom + 30;
+  const dcX = right.x - 0.085 * span, dcY = beam.bottom + 30;
   await moveTo(dcX, dcY, 22);
   await hold(5);
   await page.mouse.dblclick(dcX, dcY);
@@ -184,16 +196,16 @@ const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   if (pl) {
     await moveTo(pl.x, pl.y, 20);
     await hold(5);
-    await dragTo(pl.x - 300, pl.y, 46);
+    await dragTo(pl.x - 0.27 * span, pl.y, 46);
     await hold(20);
   }
 
   /* E - sweep the section marker across every diagram at once */
-  const stage = await box('#stage');
   const sweepY = stage.y + 40;
-  await moveTo(stage.x - 300, sweepY, 24);
-  await moveTo(stage.x + 380, sweepY, 78);
-  await moveTo(stage.x - 120, sweepY, 60);
+  const at = f => stage.left + f * span;   // fraction of the drawing width
+  await moveTo(at(0.14), sweepY, 24);
+  await moveTo(at(0.88), sweepY, 78);
+  await moveTo(at(0.30), sweepY, 60);
   await hold(14);
 
   /* F - something indeterminate: three-span continuous */
@@ -203,8 +215,8 @@ const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   await hold(24);
 
   /* G - sweep it again */
-  await moveTo(stage.x - 340, sweepY, 26);
-  await moveTo(stage.x + 300, sweepY, 74);
+  await moveTo(at(0.10), sweepY, 26);
+  await moveTo(at(0.82), sweepY, 74);
   await hold(12);
 
   /* H - dark mode.  Click the real button: it calls drawStage(), and the
@@ -213,8 +225,8 @@ const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   const theme = await box('#btnTheme');
   await moveTo(theme.x, theme.y, 26);
   await clickAt(theme.x, theme.y, 14);
-  await moveTo(stage.x - 200, sweepY, 24);
-  await moveTo(stage.x + 260, sweepY, 60);
+  await moveTo(at(0.20), sweepY, 24);
+  await moveTo(at(0.78), sweepY, 60);
   await hold(30);
 
   console.log('captured', n, 'frames ->', (n / FPS).toFixed(1) + 's at ' + FPS + ' fps');
@@ -225,7 +237,7 @@ const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   const ff = (args) => execFileSync('ffmpeg', ['-v', 'error', '-y'].concat(args), { stdio: 'inherit' });
 
   ff(['-framerate', String(FPS), '-i', path.join(OUT, '%05d.png'),
-      '-vf', 'crop=3200:1848:0:0,scale=1600:924:flags=lanczos',
+      '-vf', 'scale=' + W + ':' + H + ':flags=lanczos',
       '-c:v', 'libx264', '-preset', 'slow', '-crf', '20',
       '-pix_fmt', 'yuv420p', '-movflags', '+faststart', mp4]);
 
