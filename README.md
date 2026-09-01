@@ -92,13 +92,27 @@ The moment diagram can be flipped to the tension-side convention.
 
 <br>
 
-Direct stiffness method, two-node Euler–Bernoulli elements, with a node at every support, release, point load and line-load boundary. That meshing makes the consistent load vector exact, so the nodal displacements are exact for the governing ODE.
+| step | how |
+|---|---|
+| Analysis | Direct stiffness, two-node Euler–Bernoulli elements |
+| Mesh | A node at every support, release, point load and line-load end |
+| Nodal displacements | **Exact** — that mesh makes the consistent load vector exact |
+| `N`, `V`, `M` | Integrated from applied loads + computed reactions. Mesh-independent |
+| `θ`, `v` | Exact element solution `v = Hermite(v₁,θ₁,v₂,θ₂) + v_p`, with `v_p` solving `EI·v'''' = q − dm/dx` clamped–clamped |
+| Hinges, shear releases | Split the degree of freedom at the node — no penalty stiffness |
+| Settlement, imposed rotation | Prescribed displacements |
+| Spring reactions | Same residual `K₀d − F₀` as every other reaction |
 
-`N`, `V` and `M` are then integrated directly from the applied loads plus the computed reactions — exact and mesh-independent. Slope and deflection use the exact element solution, `v = Hermite(v₁,θ₁,v₂,θ₂) + v_p`, where `v_p` solves `EI·v'''' = q − dm/dx` clamped-clamped. Neither is sampled or interpolated.
+Nothing is sampled or interpolated at any step.
 
-Releases split the degree of freedom at the node instead of using a penalty. Settlements are prescribed displacements; spring reactions come out of the same residual `K₀d − F₀` as every other reaction.
+**Assumptions:**
 
-**Assumes** linear elastic, small displacements, constant `EI`, bending only — shear deformation neglected.
+| assumption | meaning |
+|---|---|
+| Linear elastic | no yielding; double the load, double the answer |
+| Small displacements | the geometry used is the undeflected one |
+| Constant `EI` | one cross-section for the whole span |
+| Bending only | shear deformation neglected (Euler–Bernoulli, not Timoshenko) |
 
 </details>
 
@@ -111,14 +125,22 @@ Releases split the degree of freedom at the node instead of using a penalty. Set
 node tests/solver.test.js
 ```
 
-Checked against published closed-form solutions: simple spans, cantilevers, overhangs, propped cantilevers, fixed-ended beams, two- and three-span continuous beams, triangular and trapezoidal loads, end moments, distributed moments, internal hinges, settlement, springs, guided supports, axial and inclined loads.
+Every answer is checked against a published closed-form solution:
 
-Every case additionally verifies:
+| | covered |
+|---|---|
+| Structures | simple spans · cantilevers · overhangs · propped cantilevers · fixed-ended · two- and three-span continuous |
+| Loads | point · uniform · triangular · trapezoidal · end moments · distributed moments · axial · inclined |
+| Details | internal hinges · guided supports · support settlement · elastic springs |
 
-- `EI·v''(x) = M(x)` at interior stations — deflected shape and moment diagram are computed by independent routes and must agree
-- global equilibrium of loads against computed reactions
-- superposition across three simultaneous loads
-- mesh independence — redundant nodes must not change any answer
+Every case also has to pass four independent checks:
+
+| check | what it proves |
+|---|---|
+| `EI·v''(x) = M(x)` at interior stations | the deflected shape and the moment diagram are reached by two separate routes and agree |
+| Loads vs computed reactions | global equilibrium |
+| Three loads applied at once | superposition |
+| Extra, redundant nodes added | mesh independence — the answers must not move |
 
 CI runs all of it on every push, and fails if `dist/` has drifted from source.
 
