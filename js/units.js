@@ -29,7 +29,7 @@ var Units = {
     k:     { sym: 'kN/m',     f: 1e3,      dec: 4 },
     kr:    { sym: 'kN·m/rad', f: 1e3, dec: 4 },
     slope: { sym: 'rad',      f: 1,        dec: 5 },
-    defaults: { L: 8, E: 200e9, I: 2.0e-4, A: 8.0e-3, snap: 0.25 }
+    defaults: { L: 8, E: 200e9, I: 2.0e-4, A: 8.0e-3, snap: 0.01 }
   },
 
   US: {
@@ -49,7 +49,7 @@ var Units = {
     k:     { sym: 'kip/in',    f: KIP / IN,    dec: 4 },
     kr:    { sym: 'kip·ft/rad', f: KIP * FT, dec: 4 },
     slope: { sym: 'rad',       f: 1,           dec: 5 },
-    defaults: { L: 25, E: 29000 * KSI, I: 5.0e-4, A: 1.2e-2, snap: 0.5 }
+    defaults: { L: 25, E: 29000 * KSI, I: 5.0e-4, A: 1.2e-2, snap: 0.01 }
   }
 };
 

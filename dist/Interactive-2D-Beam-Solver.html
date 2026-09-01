@@ -611,7 +611,7 @@ var Units = {
     k:     { sym: 'kN/m',     f: 1e3,      dec: 4 },
     kr:    { sym: 'kN·m/rad', f: 1e3, dec: 4 },
     slope: { sym: 'rad',      f: 1,        dec: 5 },
-    defaults: { L: 8, E: 200e9, I: 2.0e-4, A: 8.0e-3, snap: 0.25 }
+    defaults: { L: 8, E: 200e9, I: 2.0e-4, A: 8.0e-3, snap: 0.01 }
   },
 
   US: {
@@ -631,7 +631,7 @@ var Units = {
     k:     { sym: 'kip/in',    f: KIP / IN,    dec: 4 },
     kr:    { sym: 'kip·ft/rad', f: KIP * FT, dec: 4 },
     slope: { sym: 'rad',       f: 1,           dec: 5 },
-    defaults: { L: 25, E: 29000 * KSI, I: 5.0e-4, A: 1.2e-2, snap: 0.5 }
+    defaults: { L: 25, E: 29000 * KSI, I: 5.0e-4, A: 1.2e-2, snap: 0.01 }
   }
 };
 
@@ -2525,7 +2525,7 @@ var Render = (function () {
     check('Snap positions to a grid', 'snap');
     numField(p, 'Snap step', U().len, function () { return state.opts.snapStep; },
       function (v) { state.opts.snapStep = Math.max(v, 1e-6); });
-    elh('p', { class: 'hint', text: 'Hold Alt while dragging to bypass the snap grid. Arrow keys nudge the selected object by one step.' }, p);
+    elh('p', { class: 'hint', text: 'The default 0.01 grid is fine enough that dragging feels free while positions stay clean. Type a larger step - 0.25, 0.5 - when you want objects to land on round values. Hold Alt while dragging to bypass it; arrow keys nudge by one step, Shift by five.' }, p);
   }
 
   function buildQuickTogs() {

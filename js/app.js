@@ -441,7 +441,7 @@
     check('Snap positions to a grid', 'snap');
     numField(p, 'Snap step', U().len, function () { return state.opts.snapStep; },
       function (v) { state.opts.snapStep = Math.max(v, 1e-6); });
-    elh('p', { class: 'hint', text: 'Hold Alt while dragging to bypass the snap grid. Arrow keys nudge the selected object by one step.' }, p);
+    elh('p', { class: 'hint', text: 'The default 0.01 grid is fine enough that dragging feels free while positions stay clean. Type a larger step - 0.25, 0.5 - when you want objects to land on round values. Hold Alt while dragging to bypass it; arrow keys nudge by one step, Shift by five.' }, p);
   }
 
   function buildQuickTogs() {
