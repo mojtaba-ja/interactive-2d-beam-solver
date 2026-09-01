@@ -12,11 +12,11 @@
 </p>
 
 <p align="center">
-  <img src="docs/screenshot.jpg" alt="A propped cantilever under a uniform load with its shear force diagram" width="900">
+  <img src="docs/demo.gif" alt="Dragging a support to create an overhang, dropping a point load, and sweeping the section marker across the shear, moment and deflection diagrams" width="900">
 </p>
 
 <p align="center">
-  <img src="docs/Video.gif" alt="A propped cantilever under a uniform load with its shear force diagram" width="900">
+  <sub><a href="docs/demo.mp4">Watch the same demo as MP4</a> &middot; sharper, 1600&times;924</sub>
 </p>
 
 <p align="center">

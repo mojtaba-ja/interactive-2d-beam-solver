@@ -2820,6 +2820,23 @@ var Render = (function () {
 
   function initStage() {
     var svg = $('stage');
+    var lastTap = { t: -1e9, x: 0, y: 0 }, lastAdd = { t: -1e9, x: 0, y: 0 };
+
+    /* Adding a point load is driven from pointerdown, not from `dblclick`:
+       the first click re-renders the scene, so mousedown and mouseup land on
+       different nodes and the browser never synthesises click/dblclick. */
+    function addPointLoadAt(e) {
+      /* the native dblclick, when it does arrive, repeats the gesture we have
+         already served from pointerdown - same spot, a few ms later */
+      if (e.timeStamp - lastAdd.t < 400 &&
+          Math.abs(e.clientX - lastAdd.x) < 6 && Math.abs(e.clientY - lastAdd.y) < 6) return;
+      lastAdd = { t: e.timeStamp, x: e.clientX, y: e.clientY };
+      var ld = { id: uid(), kind: 'point', x: modelX(e, true), P: 25 * U().force.f, angle: 0 };
+      state.loads.push(ld);
+      state.selection = { kind: 'load', id: ld.id };
+      pushHistory(); refresh();
+      toast('Point load added - double-click the beam to add more');
+    }
 
     svg.addEventListener('pointerdown', function (e) {
       var t = e.target.closest ? e.target.closest('[data-kind]') : null;
@@ -2827,6 +2844,14 @@ var Render = (function () {
         /* clicking empty space (or a diagram): move the section marker */
         var px0 = svgX(e);
         if (px0 >= scene.padL && px0 <= scene.padL + scene.plotW) {
+          var ts0 = e.timeStamp;
+          if (ts0 - lastTap.t < 450 &&
+              Math.abs(e.clientX - lastTap.x) < 6 && Math.abs(e.clientY - lastTap.y) < 6) {
+            lastTap.t = -1e9;
+            addPointLoadAt(e);
+            return;
+          }
+          lastTap = { t: ts0, x: e.clientX, y: e.clientY };
           state.sectionX = modelX(e, false);
           state.selection = null;
           refresh();
@@ -2897,17 +2922,13 @@ var Render = (function () {
     svg.addEventListener('pointercancel', endDrag);
     svg.addEventListener('pointerleave', function () { hoverX = null; hoverY = null; hideCrosshair(); });
 
-    /* double click on empty space adds a point load there */
+    /* kept for the cases where the browser does deliver a dblclick;
+       addPointLoadAt() de-duplicates against the pointerdown path */
     svg.addEventListener('dblclick', function (e) {
       if (e.target.closest && e.target.closest('[data-kind]')) return;
       var pxd = svgX(e);
       if (pxd < scene.padL || pxd > scene.padL + scene.plotW) return;
-      var x = modelX(e, true);
-      var ld = { id: uid(), kind: 'point', x: x, P: 25 * U().force.f, angle: 0 };
-      state.loads.push(ld);
-      state.selection = { kind: 'load', id: ld.id };
-      pushHistory(); refresh();
-      toast('Point load added - double-click the beam to add more');
+      addPointLoadAt(e);
     });
   }
 
