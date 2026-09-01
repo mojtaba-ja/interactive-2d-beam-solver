@@ -131,6 +131,7 @@ js/app.js             state, editing, results, import/export
 js/units.js           SI/US units and formatting
 tests/solver.test.js  validation suite
 build.js              bundles everything into dist/
+tools/record-demo.js  regenerates the demo GIF and MP4
 ```
 
 The model is stored in SI base units throughout; switching to US units changes the display only, never the structure.
