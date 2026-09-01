@@ -2123,7 +2123,7 @@ var Render = (function () {
       opts: {
         showN: true, showV: true, showM: true, showS: false, showD: true,
         bmdDown: false, showReactions: true, showDeflected: true,
-        snap: true, snapStep: u.defaults.snap * u.len.f, forceN: false
+        snap: false, snapStep: u.defaults.snap * u.len.f, forceN: false
       }
     };
   }
@@ -2416,7 +2416,7 @@ var Render = (function () {
   function buildSelection() {
     var p = $('selPanel'); p.innerHTML = '';
     if (!state.selection) {
-      elh('p', { class: 'hint', text: 'Click an object in the drawing or in a list above to edit it. Drag it along the beam to move it; hold Alt while dragging to ignore the snap grid.' }, p);
+      elh('p', { class: 'hint', text: 'Click an object in the drawing or in a list above to edit it. Drag it along the beam to move it, or type an exact position here. Hold Alt while dragging to ignore the snap grid if you have switched it on.' }, p);
       return;
     }
     var kind = state.selection.kind;
@@ -2525,7 +2525,7 @@ var Render = (function () {
     check('Snap positions to a grid', 'snap');
     numField(p, 'Snap step', U().len, function () { return state.opts.snapStep; },
       function (v) { state.opts.snapStep = Math.max(v, 1e-6); });
-    elh('p', { class: 'hint', text: 'The default 0.01 grid is fine enough that dragging feels free while positions stay clean. Type a larger step - 0.25, 0.5 - when you want objects to land on round values. Hold Alt while dragging to bypass it; arrow keys nudge by one step, Shift by five.' }, p);
+    elh('p', { class: 'hint', text: 'Snapping is off by default, so objects drag freely. Tick it to make positions land on the step above - 0.01 keeps the numbers clean, 0.25 or 0.5 places things on round values. Hold Alt while dragging to bypass it; arrow keys nudge by one step, Shift by five.' }, p);
   }
 
   function buildQuickTogs() {
@@ -3178,7 +3178,7 @@ var Render = (function () {
         '<h3>Building a model</h3>' +
         '<ul>' +
         '<li>Set the span, <code>E</code> and <code>I</code> in the <b>Beam</b> panel. The unit system is switched in the top bar; the model itself never changes, only the numbers you read.</li>' +
-        '<li>Add supports and loads from the sidebar, then <b>drag</b> them along the beam. Distributed loads have round handles at each end for the extents <code>a</code> and <code>b</code>. Hold <b>Alt</b> to bypass the snap grid.</li>' +
+        '<li>Add supports and loads from the sidebar, then <b>drag</b> them along the beam. Distributed loads have round handles at each end for the extents <code>a</code> and <code>b</code>. Positions are continuous unless you switch the snap grid on in <b>Display options</b>; hold <b>Alt</b> to bypass it.</li>' +
         '<li><b>Double-click</b> an empty part of the drawing to drop a point load there. Click any object to edit its exact values in <b>Selected object</b>.</li>' +
         '<li>Arrow keys nudge the selection, <b>Delete</b> removes it, <b>Ctrl+Z</b> / <b>Ctrl+Y</b> undo and redo.</li>' +
         '</ul>' +
