@@ -563,11 +563,13 @@ text { user-select: none; }
       </div>
 
       <p class="hint" style="max-width:70ch">
-        Sign convention &mdash; downward forces and clockwise moments are positive on input;
-        shear is the resultant of the upward forces to the left of the cut; bending moment is
-        positive when it sags (tension on the bottom fibre); deflection is positive upward.
-        Analysis is Euler&ndash;Bernoulli (bending only, shear deformation neglected), small
-        displacements, linear elastic.
+        Sign convention &mdash; you <b>type</b> loads positive downward and moments positive
+        clockwise; a negative number flips them. In the <b>diagrams</b>, positive <i>V</i>
+        rotates the segment clockwise and positive <i>M</i> bends it concave upward (sagging),
+        with <i>v</i> positive upward. Inside, the solver uses <i>x</i> right, <i>y</i> up,
+        counter-clockwise, so <code>dV/dx = q</code> and <code>dM/dx = V</code> hold with
+        <i>q</i> positive upward. Analysis is Euler&ndash;Bernoulli (bending only, shear
+        deformation neglected), small displacements, linear elastic.
       </p>
 
     </main>
@@ -1873,7 +1875,15 @@ var Render = (function () {
                    stroke: o.grid, 'stroke-width': 1 }, g);
     });
 
-    /* ---- filled area + curve ---- */
+    /* ---- filled area + curve ----
+       Only the internal-force diagrams are shaded. N, V and M are abstract
+       ordinates measured off a datum, where the enclosed area is the point
+       (area under V is dM, under M/EI is d-theta) - hatching them is the
+       textbook convention. Slope and deflection are deformed geometry: v is
+       literally a picture of the beam, the same curve drawn as the dashed
+       elastic curve up in the scene, and nobody hatches an elastic curve.
+       Theta goes with it for consistency, though its area does equal dv. */
+    var filled = (o.key === 'N' || o.key === 'V' || o.key === 'M');
     var d = '', dl = '';
     o.data.forEach(function (p, i) {
       var px = o.X(p.x), py = Y(p.y);
@@ -1881,10 +1891,12 @@ var Render = (function () {
       dl += (i === 0 ? 'M' : 'L') + px.toFixed(2) + ',' + py.toFixed(2);
     });
     if (o.data.length) {
-      var last = o.data[o.data.length - 1], first = o.data[0];
-      d += 'L' + o.X(last.x).toFixed(2) + ',' + y0.toFixed(2) +
-           'L' + o.X(first.x).toFixed(2) + ',' + y0.toFixed(2) + 'Z';
-      el('path', { d: d, fill: o.color, 'fill-opacity': .17, stroke: 'none' }, g);
+      if (filled) {
+        var last = o.data[o.data.length - 1], first = o.data[0];
+        d += 'L' + o.X(last.x).toFixed(2) + ',' + y0.toFixed(2) +
+             'L' + o.X(first.x).toFixed(2) + ',' + y0.toFixed(2) + 'Z';
+        el('path', { d: d, fill: o.color, 'fill-opacity': .17, stroke: 'none' }, g);
+      }
       el('path', { d: dl, fill: 'none', stroke: o.color, 'stroke-width': 2,
                    'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, g);
     }
@@ -3179,8 +3191,9 @@ var Render = (function () {
         '</ul>' +
         '<h3>Sign conventions</h3>' +
         '<ul>' +
-        '<li>Input: a point load or line load is <b>positive downward</b>; a moment is <b>positive clockwise</b>; a settlement is <b>positive downward</b>. Enter a negative number for the opposite direction.</li>' +
-        '<li>Output: <b>V(x)</b> is the resultant of the upward forces to the left of the cut. <b>M(x)</b> is positive when it <b>sags</b> (tension on the bottom fibre). <b>v(x)</b> and the reactions <b>Ry</b> are positive <b>upward</b>; reaction moments are positive <b>counter-clockwise</b>.</li>' +
+        '<li><b>You type</b> loads positive <b>downward</b> and moments positive <b>clockwise</b> (settlements downward). A negative number flips it.</li>' +
+        '<li><b>The diagrams</b> follow the textbook rule: positive <b>V</b> rotates the segment <b>clockwise</b>, positive <b>M</b> bends it <b>concave upward</b> (sagging, tension on the bottom fibre), <b>N</b> is tension, <b>&theta;</b> counter-clockwise, <b>v</b> and <b>Ry</b> upward.</li>' +
+        '<li><b>Inside</b>, the solver uses <i>x</i> right, <i>y</i> up, counter-clockwise - so <code>dV/dx = q</code> and <code>dM/dx = V</code> hold with the load <i>q</i> positive upward, and the area under <i>V</i> is <code>&Delta;M</code>.</li>' +
         '<li>Tick <i>"Bending moment drawn on the tension side"</i> in <b>Display options</b> to plot the moment diagram downward for positive sagging, as many textbooks do.</li>' +
         '</ul>' +
         '<h3>What the solver does</h3>' +

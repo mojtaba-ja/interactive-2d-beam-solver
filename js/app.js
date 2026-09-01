@@ -1107,8 +1107,9 @@
         '</ul>' +
         '<h3>Sign conventions</h3>' +
         '<ul>' +
-        '<li>Input: a point load or line load is <b>positive downward</b>; a moment is <b>positive clockwise</b>; a settlement is <b>positive downward</b>. Enter a negative number for the opposite direction.</li>' +
-        '<li>Output: <b>V(x)</b> is the resultant of the upward forces to the left of the cut. <b>M(x)</b> is positive when it <b>sags</b> (tension on the bottom fibre). <b>v(x)</b> and the reactions <b>Ry</b> are positive <b>upward</b>; reaction moments are positive <b>counter-clockwise</b>.</li>' +
+        '<li><b>You type</b> loads positive <b>downward</b> and moments positive <b>clockwise</b> (settlements downward). A negative number flips it.</li>' +
+        '<li><b>The diagrams</b> follow the textbook rule: positive <b>V</b> rotates the segment <b>clockwise</b>, positive <b>M</b> bends it <b>concave upward</b> (sagging, tension on the bottom fibre), <b>N</b> is tension, <b>&theta;</b> counter-clockwise, <b>v</b> and <b>Ry</b> upward.</li>' +
+        '<li><b>Inside</b>, the solver uses <i>x</i> right, <i>y</i> up, counter-clockwise - so <code>dV/dx = q</code> and <code>dM/dx = V</code> hold with the load <i>q</i> positive upward, and the area under <i>V</i> is <code>&Delta;M</code>.</li>' +
         '<li>Tick <i>"Bending moment drawn on the tension side"</i> in <b>Display options</b> to plot the moment diagram downward for positive sagging, as many textbooks do.</li>' +
         '</ul>' +
         '<h3>What the solver does</h3>' +

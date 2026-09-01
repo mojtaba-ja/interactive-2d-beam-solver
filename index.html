@@ -118,11 +118,13 @@
       </div>
 
       <p class="hint" style="max-width:70ch">
-        Sign convention &mdash; downward forces and clockwise moments are positive on input;
-        shear is the resultant of the upward forces to the left of the cut; bending moment is
-        positive when it sags (tension on the bottom fibre); deflection is positive upward.
-        Analysis is Euler&ndash;Bernoulli (bending only, shear deformation neglected), small
-        displacements, linear elastic.
+        Sign convention &mdash; you <b>type</b> loads positive downward and moments positive
+        clockwise; a negative number flips them. In the <b>diagrams</b>, positive <i>V</i>
+        rotates the segment clockwise and positive <i>M</i> bends it concave upward (sagging),
+        with <i>v</i> positive upward. Inside, the solver uses <i>x</i> right, <i>y</i> up,
+        counter-clockwise, so <code>dV/dx = q</code> and <code>dM/dx = V</code> hold with
+        <i>q</i> positive upward. Analysis is Euler&ndash;Bernoulli (bending only, shear
+        deformation neglected), small displacements, linear elastic.
       </p>
 
     </main>

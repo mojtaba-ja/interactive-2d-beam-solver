@@ -480,7 +480,15 @@ var Render = (function () {
                    stroke: o.grid, 'stroke-width': 1 }, g);
     });
 
-    /* ---- filled area + curve ---- */
+    /* ---- filled area + curve ----
+       Only the internal-force diagrams are shaded. N, V and M are abstract
+       ordinates measured off a datum, where the enclosed area is the point
+       (area under V is dM, under M/EI is d-theta) - hatching them is the
+       textbook convention. Slope and deflection are deformed geometry: v is
+       literally a picture of the beam, the same curve drawn as the dashed
+       elastic curve up in the scene, and nobody hatches an elastic curve.
+       Theta goes with it for consistency, though its area does equal dv. */
+    var filled = (o.key === 'N' || o.key === 'V' || o.key === 'M');
     var d = '', dl = '';
     o.data.forEach(function (p, i) {
       var px = o.X(p.x), py = Y(p.y);
@@ -488,10 +496,12 @@ var Render = (function () {
       dl += (i === 0 ? 'M' : 'L') + px.toFixed(2) + ',' + py.toFixed(2);
     });
     if (o.data.length) {
-      var last = o.data[o.data.length - 1], first = o.data[0];
-      d += 'L' + o.X(last.x).toFixed(2) + ',' + y0.toFixed(2) +
-           'L' + o.X(first.x).toFixed(2) + ',' + y0.toFixed(2) + 'Z';
-      el('path', { d: d, fill: o.color, 'fill-opacity': .17, stroke: 'none' }, g);
+      if (filled) {
+        var last = o.data[o.data.length - 1], first = o.data[0];
+        d += 'L' + o.X(last.x).toFixed(2) + ',' + y0.toFixed(2) +
+             'L' + o.X(first.x).toFixed(2) + ',' + y0.toFixed(2) + 'Z';
+        el('path', { d: d, fill: o.color, 'fill-opacity': .17, stroke: 'none' }, g);
+      }
       el('path', { d: dl, fill: 'none', stroke: o.color, 'stroke-width': 2,
                    'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, g);
     }

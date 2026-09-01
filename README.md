@@ -56,7 +56,9 @@ node tests/solver.test.js
 
 <br>
 
-**Numbers you type in.** A positive value means:
+Three things carry a sign, and they are not the same thing.
+
+**1. What you type.** Chosen so a "20 kN/m downward UDL" is entered as `20`:
 
 | you enter | positive points |
 |---|---|
@@ -65,14 +67,27 @@ node tests/solver.test.js
 | support settlement | **down** |
 | load angle | `0°` straight down, tilting toward `+x` as it grows |
 
-Type a negative number to flip any of them — there is no separate direction switch.
+Type a negative number to flip any of them.
 
-**Numbers the solver gives back.** A positive value means:
+**2. What the solver works in.** Each typed value is negated once as it is read
+(`js/solver.js:166-186`), so inside it is the standard `x` right, `y` up,
+counter-clockwise-positive system — the one the textbook relations are written in:
+
+| relation | with `q` positive **upward** |
+|---|---|
+| slope of the shear diagram | `dV/dx = q` |
+| slope of the moment diagram | `dM/dx = V` |
+| area under `V` | `ΔM` |
+| area under `M/EI` | `Δθ` |
+
+The last two are why `N`, `V`, `M` are shaded and `θ`, `v` are plain lines.
+
+**3. What the diagrams show.**
 
 | result | positive is |
 |---|---|
-| `V` shear | net **upward** force on the part of the beam left of the cut |
-| `M` moment | **sagging** — the beam smiles, tension on the bottom face |
+| `V` shear | rotates the segment **clockwise** |
+| `M` moment | bends the segment **concave upward** — sagging, tension on the bottom fibre |
 | `N` axial | **tension** |
 | `v` deflection | **up** |
 | `θ` slope | **counter-clockwise** |
