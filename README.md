@@ -54,9 +54,32 @@ node tests/solver.test.js
 
 <br>
 
-**In** — force and line load `+` down · moment `+` clockwise · settlement `+` down · load angle tilts toward `+x`. Negative flips it.
+**Numbers you type in.** A positive value means:
 
-**Out** — `V` = upward forces left of the cut · `M` `+` sagging · `N` `+` tension · `v`, `θ`, `Ry` `+` up / CCW.
+| you enter | positive points |
+|---|---|
+| point load, uniform or triangular load | **down** |
+| applied moment | **clockwise** |
+| support settlement | **down** |
+| load angle | `0°` straight down, tilting toward `+x` as it grows |
+
+Type a negative number to flip any of them — there is no separate direction switch.
+
+**Numbers the solver gives back.** A positive value means:
+
+| result | positive is |
+|---|---|
+| `V` shear | net **upward** force on the part of the beam left of the cut |
+| `M` moment | **sagging** — the beam smiles, tension on the bottom face |
+| `N` axial | **tension** |
+| `v` deflection | **up** |
+| `θ` slope | **counter-clockwise** |
+| `Ry` reaction | **up**, and reaction moments are counter-clockwise |
+
+One pair looks contradictory and isn't: load a cantilever at the tip and the wall
+reports a reaction moment of `+PL` while the moment diagram reads `-PL` at the same
+point. The reaction follows the counter-clockwise rule, the diagram follows the
+sagging rule, and here they disagree in name only.
 
 The moment diagram can be flipped to the tension-side convention.
 
